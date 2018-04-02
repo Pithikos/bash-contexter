@@ -22,7 +22,7 @@ Simply run
     wget -O - https://raw.githubusercontent.com/Pithikos/bash-contexter/master/install | bash
 
 
-The installion script will clone everything under ``~/.bash_contexter` and a `source` entry will be appended
+The installion script will clone everything under `~/.bash_contexter` and a `source` entry will be appended
 to your `~/.bashrc`.
 
 
