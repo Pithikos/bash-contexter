@@ -53,7 +53,7 @@ Uninstall
 
     rm -r ~/.bash_contexter
 
-You also need to manually remove the source line in your ~/.profile or ~/.bash_profile
+You also need to manually remove the source line in your ~/.bashrc
 
 
 Helpers

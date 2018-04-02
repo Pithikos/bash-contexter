@@ -32,11 +32,9 @@ git clone "$BC_GIT_URL" "$BC_INSTALL_DIR"
 
 
 # Add source entry
-if [ -f ~/.bash_profile ]; then
-  append_sourcing_line ~/.bash_profile
-elif [ -f ~/.profile ]; then
-  append_sourcing_line ~/.profile
+if [ -f ~/.bashrc ]; then
+  append_sourcing_line ~/.bashrc
 else
-  echo "Could not find .bash_profile or .profile"
-  echo "Please source $BC_SOURCED"
+  echo "Could not find .bashrc"
+  echo "Please source $BC_SOURCED manually"
 fi
