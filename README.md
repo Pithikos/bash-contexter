@@ -36,10 +36,13 @@ You can ofcourse always add your own custom context like below:
     function activate_virtualenv {
       echo 'Activating virtualenv..'
       source venv/bin/activate
+      echo 'Now running command'
+      "$@"
+      return $?
     }
 
     function precheck_activate_virtualenv {
-      return ls venv/bin/activate &> /dev/null
+      return [ -f venv/bin/activate ]
     }
 
     bash_contexter_register 'activate_virtualenv'
