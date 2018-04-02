@@ -1,45 +1,90 @@
 source utils.sh
-# Source django example
 
 
-# Ensure state is created
-# if [ ! -f commands.pik ]; then
-#   _failure 'Expected a commands.pik to be created'
-# fi
-# if [ ! -f prechecks.pik ]; then
-#   _failure 'Expected a prechecks.pik to be created'
-# fi
-#
-# # Running non-existent command should give default error message
-# output=`bash -c dffdsggd 2>&1`
-# expected='bash: dffdsggd: command not found'
-# if [[ "$output" != "$expected" ]]; then
-#   _failure "Expected '$expected', got '$output'"
-# fi
-
+##############################################
+# CASE: Normal usage
+##############################################
 
 source ../bash_contexter.sh
 
-# Creat a simple echo that will always run
-# function echo_command {
-# 	echo "$1"
-# }
-# function precheck_echo_command {
-# 	return 0
-# }
-# bash_contexter_register 'echo_command'
-
-# type command_not_found_handle
+# Create a simple echo that will always run
+function echo_command {
+	echo "$1"
+}
+function precheck_echo_command {
+	return 0
+}
+bash_contexter_register 'echo_command'
 
 # Run
-# output=`nonexistingcommand 2>&1`
-# expected='nonexistingcommand'
-# echo "$output"
+output=`nonexistingcommand 2>&1`
+expected='nonexistingcommand'
+if [[ $output != $expected ]]; then
+  _failure "Expected '$expected', got '$output'"
+fi
 
 
-function my_test(){
-    echo 'this is a test'
+##############################################
+# CASE: Failing precheck
+##############################################
+
+_reset
+
+# Create a simple echo with a precheck that always fails
+function echo_command {
+	echo "$1"
 }
+function precheck_echo_command {
+	return 1
+}
+bash_contexter_register 'echo_command'
 
-export -f my_test
-python -c "from subprocess import check_output; print(check_output('my_test', shell=True))"
+# Run
+output=`nonexistingcommand 2>&1`
+notexpected='nonexistingcommand'
+if [[ $output == $notexpected ]] || [[ $output == '' ]]; then
+  _failure "Expected something but got '$output'"
+fi
+
+
+##############################################
+# CASE: Missing precheck
+##############################################
+
+
+_reset
+unset -f precheck_echo_command
+function echo_command {
+	echo "$1"
+}
+bash_contexter_register 'echo_command' &> /dev/null
+if (( $? == 0 )); then
+  _failure "Should not have registered 'echo_command', but it did."
+fi
+
+
+##############################################
+# CASE: Chaining
+##############################################
+_reset
+function echo_command_1 {
+	echo 'first'
+}
+function precheck_echo_command_1 {
+  return 1
+}
+function echo_command_2 {
+	echo 'second'
+}
+function precheck_echo_command_2 {
+  return 0
+}
+bash_contexter_register 'echo_command_1'
+bash_contexter_register 'echo_command_2'
+
+# Run
+output=`nonexistingcommand 2>&1`
+expected='second'
+if [[ $output != $expected ]]; then
+  _failure "Expected '$expected', got '$output'"
+fi
