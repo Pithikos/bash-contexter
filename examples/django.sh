@@ -1,17 +1,15 @@
 function try_run_django_command {
-	manage_file_path=`_upfind_file 'manage.py'`
-	if [[ "$manage_file_path" ]]; then
-		echo "Detected django project."
-		python "$manage_file_path" "$@"
-	else
-		echo "Not a django project."
-	fi
+	python "$(_upfind_file 'manage.py')" "$@"
 }
 
 
 function precheck_try_run_django_command {
-	_upfind_file 'manage.py' &> /dev/null
-	return $?
+	if _upfind_file 'manage.py' &> /dev/null; then
+		echo "Detected django project."
+		return 0
+	else
+		return 1
+	fi
 }
 
 
