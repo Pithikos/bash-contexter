@@ -52,13 +52,11 @@ command_not_found_handle () {
 
 	# Fallback to _before_bash_contexter_command_not_found_handle
 	if type _before_bash_contexter_command_not_found_handle &> /dev/null; then
-		echo "running before_"
 		_before_bash_contexter_command_not_found_handle "$@"
 		return $?
 	fi
 
 	# Fallback to _default_command_not_found_handle
-	echo "running default_"
 	_default_command_not_found_handle "$@"
 	return $?
 }
