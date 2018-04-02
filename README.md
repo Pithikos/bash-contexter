@@ -51,7 +51,7 @@ reason the precheck functions should return 0 if the main function should be exe
 Uninstall
 ---------
 
-    rm -r ~/.bash_contexter
+    rm -fr ~/.bash_contexter
 
 You also need to manually remove the source line in your ~/.bashrc
 
