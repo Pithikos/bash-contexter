@@ -44,7 +44,7 @@ command_not_found_handle () {
 		cmd="${_bash_contexter_context_commands[i]}"
 
 		# Go through prechecks and execute context functions
-		if ${_bash_contexter_prechecks_commands[$cmd]}; then
+		if ${_bash_contexter_prechecks_commands[$cmd]} "$@"; then
 			$cmd "$@"
 			return $?
 		fi
