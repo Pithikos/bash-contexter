@@ -10,7 +10,8 @@ function try_run_django_command {
 
 
 function precheck_try_run_django_command {
-	return _upfind_file 'manage.py'
+	_upfind_file 'manage.py' &> /dev/null
+	return $?
 }
 
 
