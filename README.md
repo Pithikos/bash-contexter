@@ -22,33 +22,41 @@ Simply run
     wget -O - https://raw.githubusercontent.com/Pithikos/bash-contexter/master/install | bash
 
 
-The installion script will clone everything under ~/.bash_contexter and a `source` entry will be appended
-to your ~/.bash_profile or ~/.profile if only that exists.
+The installion script will clone everything under ``~/.bash_contexter` and a `source` entry will be appended
+to your `~/.bashrc`.
 
 
 Usage
 -----
 
-The fastest way is to `source` some of the examples that suit you.
+After installation you don't have any contexters available. The fastest way is
+to use one of the existing examples.
 
-You can ofcourse always add your own custom context like below:
+To source the Django contexter for example you add this to your `.bashrc`:
 
-    function activate_virtualenv {
-      echo 'Activating virtualenv..'
-      source venv/bin/activate
-      echo 'Now running command'
-      "$@"
-      return $?
+    source ~/.bash_contexter/examples/django.sh
+
+Then whenever you are in a Django project you can skip the `python manage.py` of
+the command you want to run.
+
+
+Custom contexters
+-----------------
+
+You can create your own contexters like below:
+
+    function custom_command_not_found {
+      echo "Could not find command '$@'"
     }
 
-    function precheck_activate_virtualenv {
-      return [ -f venv/bin/activate ]
+    function precheck_custom_command_not_found {
+      return 0
     }
 
-    bash_contexter_register 'activate_virtualenv'
+    bash_contexter_register 'custom_command_not_found'
 
-The `precheck_` function is a prerequisite for the main registered function. For this
-reason the precheck functions should return 0 if the main function should be executed.
+The `precheck_` function is a prerequisite for every contexter and should return 0
+if the contexter is to run or 1 for it not to run.
 
 
 Uninstall
