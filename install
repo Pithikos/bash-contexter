@@ -1,0 +1,42 @@
+#! /bin/bash
+
+BC_INSTALL_DIR=~/.bash_contexter
+BC_GIT_URL="git@github.com:Pithikos/bash-contexter.git"
+BC_SOURCED=~/.bash_contexter/bash_contexter.sh
+
+
+function append_sourcing_line {
+  sourcing_line="source $BC_SOURCED"
+  if [ ! -f "$1" ]; then
+    return 1
+  fi
+  if egrep "$sourcing_line" "$1" > /dev/null; then
+    echo "Already sourced at $1"
+    return 0
+  else
+    echo "$sourcing_line" >> "$1"
+    egrep "$sourcing_line" "$1" > /dev/null
+    if ( $? == 0 ); then
+      echo "Appended sourcing line line to $1"
+      return 0
+    else
+      return 1
+    fi
+  fi
+}
+
+
+# Copy source code into home directory
+mkdir "$BC_INSTALL_DIR"
+git clone "$BC_GIT_URL" "$BC_INSTALL_DIR"
+
+
+# Add source entry
+if [ -f ~/.bash_profile ]; then
+  append_sourcing_line ~/.bash_profile
+elif [ -f ~/.profile ]; then
+  append_sourcing_line ~/.profile
+else
+  echo "Could not find .bash_profile or .profile"
+  echo "Please source $BC_SOURCED"
+fi
