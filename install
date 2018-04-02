@@ -16,7 +16,7 @@ function append_sourcing_line {
   else
     echo "$sourcing_line" >> "$1"
     egrep "$sourcing_line" "$1" > /dev/null
-    if ( $? == 0 ); then
+    if (( $? == 0 )); then
       echo "Appended sourcing line line to $1"
       return 0
     else
