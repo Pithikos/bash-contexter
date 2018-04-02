@@ -1,17 +1,24 @@
 Bash Contexter
 ==============
 
-The script will let's you cut down commands depending on the context. For example
-if you're inside a Django project you can type `makemigrations` instead of `python manage.py makemigrations`.
+The Bash Contexter will let you do things depending on where you run them. It takes
+advantage of `command_not_found_handle` in Bash 4.4. With it you can do things like
+below.
 
-This is accomplished by taking advantage of `command_not_found_handle` in Bash 4.4 to
-fallback to different commands depending on the context a command is given in
-the shell.
+Example (Docker)
+
+    $> docker run -it ubuntu bash
+    root@7a14657624bf:/#
+    $> 7a1
+    root@7a14657624bf:/#
 
 Example (Django)
 
+    $> ls
+    db.sqlite3  manage.py  myproj
     $> makemigrations
-    $> migrate
+    Detected django project.
+    No changes detected
 
 
 Installation
@@ -25,25 +32,23 @@ Simply run
 The installion script will clone everything under `~/.bash_contexter` and a `source` entry will be appended
 to your `~/.bashrc`.
 
+You will need to manually `source` any of the examples you want. For example your
+ `~/.bashrc` can look like this if you use Docker and Django
+
+
+    source ~/.bash_contexter/bash_contexter.sh
+    source ~/.bash_contexter/examples/django.sh
+    source ~/.bash_contexter/examples/docker.sh
+
+
 
 Usage
 -----
 
-After installation you don't have any contexters available. The fastest way is
-to use one of the existing examples.
+The fastest way is to `source` directly one of the existing examples.
 
-To source the Django contexter for example you add this to your `.bashrc`:
+You can however create custom contexters that suit your needs. See example below
 
-    source ~/.bash_contexter/examples/django.sh
-
-Then whenever you are in a Django project you can skip the `python manage.py` of
-the command you want to run.
-
-
-Custom contexters
------------------
-
-You can create your own contexters like below:
 
     function custom_command_not_found {
       echo "Could not find command '$@'"
@@ -55,8 +60,9 @@ You can create your own contexters like below:
 
     bash_contexter_register 'custom_command_not_found'
 
-The `precheck_` function is a prerequisite for every contexter and should return 0
-if the contexter is to run or 1 for it not to run.
+The `precheck_` function is a prerequisite for every contexter. Its only job is
+to determine if the context function should run or not - and for that it has to return
+0 or 1.
 
 
 Uninstall
